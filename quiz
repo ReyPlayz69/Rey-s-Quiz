@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rey's Quiz</title>
+  <style>
+    body {
+      background: #660000;
+      color: #ff4d4d;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .quiz-container {
+      background: #990000;
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 400px;
+      box-shadow: 0 0 20px #ff1a1a;
+    }
+    h1 {
+      text-align: center;
+    }
+    .question {
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+    .options {
+      margin: 10px 0 20px 0;
+    }
+    button {
+      background: #ff1a1a;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      font-size: 1em;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e60000;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.3em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Quiz: How Well Do You Know Rey?</h1>
+    
+    <div id="quiz"></div>
+
+    <button id="nextBtn">Start Quiz</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "What's Rey's favorite color?",
+        options: ["Purple", "Red", "Blue", "Green"],
+        answer: "Red"
+      },
+      {
+        question: "What does Rey love doing?",
+        options: ["Gaming", "Cooking", "Painting", "Sleeping"],
+        answer: "Gaming"
+      },
+      {
+        question: "What is Rey?",
+        options: ["Student", "Teacher", "Artist", "Chef"],
+        answer: "Student"
+      }
+    ];
+
+    const quizEl = document.getElementById('quiz');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+    let currentQuiz = 0;
+    let score = 0;
+
+    function loadQuiz() {
+      const current = quizData[currentQuiz];
+      let optionsHtml = '';
+      current.options.forEach((option, i) => {
+        optionsHtml += `
+          <label>
+            <input type="radio" name="answer" value="${option}" />
+            ${option}
+          </label><br/>
+        `;
+      });
+
+      quizEl.innerHTML = `
+        <div class="question">${current.question}</div>
+        <div class="options">${optionsHtml}</div>
+      `;
+      resultEl.innerHTML = '';
+      nextBtn.textContent = currentQuiz === quizData.length - 1 ? 'Finish' : 'Next';
+    }
+
+    nextBtn.addEventListener('click', () => {
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if (!selected) {
+        alert('Please select an answer!');
+        return;
+      }
+      if (selected.value === quizData[currentQuiz].answer) {
+        score++;
+      }
+      currentQuiz++;
+      if (currentQuiz < quizData.length) {
+        loadQuiz();
+      } else {
+        quizEl.innerHTML = '';
+        nextBtn.style.display = 'none';
+        resultEl.textContent = `You scored ${score} out of ${quizData.length}!`;
+      }
+    });
+
+    // Start quiz on load
+    loadQuiz();
+  </script>
+</body>
+</html>
